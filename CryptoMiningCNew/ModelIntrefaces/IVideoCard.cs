@@ -9,6 +9,6 @@ namespace CryptoMiningCNew.ModelIntrefaces
     interface IVideoCard
     {
         int RAM { get; set; }
-        double MinedMoneyPerHour { get; set; }
+        decimal MinedMoneyPerHour { get; set; }
     }
 }

@@ -15,12 +15,12 @@ namespace CryptoMiningCNew.StaticHelpers
 
         //Symple lambads
         private static bool ValidateProcessorGen(int generation) => generation > 0 && generation <= 9;
-        private static bool ValidatePrice(double price) => price > 0 && price <= 10000;
+        private static bool ValidatePrice(decimal price) => price > 0 && price <= 10000;
         private static bool ValidateModel(string model) => !string.IsNullOrEmpty(model);
         private static bool ValidateGen(int generation) => generation > 0;
         private static bool ValidateVideoRAM(int ram) => ram > 0 && ram <=32;
         private static bool ValidateName(string name) => !string.IsNullOrEmpty(name);
-        private static bool ValidateMoney(double money) => money >= 0;
+        private static bool ValidateMoney(decimal money) => money >= 0;
         private static bool ValidateVideoType(string type) => type == "Game" || type == "Mine";
         private static bool ValidateProcType(string type) => type == "Low" || type == "High";
         public static Processor ProcessorFactory(string type, string model, decimal price, int generation)
@@ -48,7 +48,7 @@ namespace CryptoMiningCNew.StaticHelpers
         //vurnem nqkakva afunkciq ot klasa, gotinkoto e che imame vuzmojnost da vurnem funkciq koqto
         //priema razlichni parametri  realno samo taq funkciq si ni e nujna osven ako ne iskam da zatvorim
         // izbora samo do nqkolko f-cii
-        public static Func<T, bool> getDelegate<T>(string whatToValidate)
+        public static Func<T, bool> GetDelegate<T>(string whatToValidate)
         {
             MethodInfo method = typeof(Common).GetMethod(whatToValidate, BindingFlags.Static | BindingFlags.NonPublic);
 
@@ -56,13 +56,24 @@ namespace CryptoMiningCNew.StaticHelpers
         }
 
         //sirech e tva dikshunari
-        public static Func<T, bool> getValidationFunction<T>(string valString)
+        //tazi funkciq nqma da ni e okei ako iskame da varirame s vidovete atributi
+        //ako izpolzvame T za celta ni trqbva object, ideqta e che runtime dokato pravi mapinga shte vidi che ne suvpadat tipovete i shte gurmi 
+        //sore no template here
+        //Na kratko ako izpolzvame template shte nacaka edin i susht tip navsqkude koeto ne e ok 
+        public static Func<object, bool> GetValidationFunction(string valString)
         {
-            var validators = new Dictionary<string, Func<T, bool>>
+            var validators = new Dictionary<string, Func<object, bool>>
             {
-                 { "Gen",getDelegate<T>("ValidateGen") }
+                 { "Gen", (arg) => GetDelegate<int>("ValidateGen")((int)arg) },
+                 { "ProcessorGen", (arg) => GetDelegate<int>("ValidateProcessorGen")((int)arg) },
+                 { "Price", (arg) => GetDelegate<decimal>("ValidatePrice")((decimal)arg) },
+                 { "Model", (arg) => GetDelegate<string>("ValidateModel")((string)arg) },
+                 { "RAM", (arg) => GetDelegate<int>("ValidateVideoRAM")((int)arg )},
+                 { "Name", (arg) => GetDelegate<string>("ValidateName")((string)arg) },
+                 { "Proc", (arg) => GetDelegate<string>("ValidateProcType")((string)arg) },
+                 { "Video",(arg) => GetDelegate<string>("ValidateVideoType")((string)arg)},
+                 { "Money", (arg) => GetDelegate<decimal>("ValidateMoney")((decimal)arg) }
             };
-        
 
             if (validators.ContainsKey(valString))
             {
@@ -74,9 +85,25 @@ namespace CryptoMiningCNew.StaticHelpers
             }
         }
 
-        public static  object Validate(object data, string function, string prompt)
+        //Taka ako navsqkude pasvame T v edin moment kogato kompilatorut mine prez dikshunarito 
+        //shte izprati edin i susht tip navsqkde, koeto e problem zashtoto nqkoi funkcii 
+        //priemat razl tipove, reshenieto e lambda v dikshunarito + eksplicitno zdavane
+        //Zabavleniq - ref i out i dvete podavat po referenciq razlikata e che out ne 
+        //durji da e inicializirano dkato ref iska
+        public static void Validate<T>(ref T data, string function, string prompt)
         {
-            throw new NotImplementedException();
+            Func<object, bool> validationFunction = GetValidationFunction(function);
+            while(!validationFunction(data))
+            {
+                Console.Clear();
+                Console.Write("Invalid input. Please reenter " + prompt + ": ");
+                string userInput = Console.ReadLine();
+                //tova po dosta paragrafi ne e okey no go ostavqm tuk za celt na zanqtieto :D
+                //kastut kum object ot statichen tip kato int struct bla bla, pravi takak narecheniq boxing sirech
+                //value type => reference type sheshtate se che tova vkluchva zadelqne na pamet, ako e kritichna tova ne e ok!!!
+                //data = (T)(object)userInput ba daje i ne bachka :D
+                data = (T)Convert.ChangeType(userInput, typeof(T));
+            }
         }
 
 

@@ -12,7 +12,7 @@ namespace CryptoMiningCNew.ModelIntrefaces
         Processor Processor { get; set; }
         VideoCard VideoCard { get; set; }
         int RAM { get; set; }
-        double MinedAmountPerHour { get; set; }
+        decimal MinedAmountPerHour { get; set; }
 
     }
 }

@@ -13,7 +13,7 @@ namespace CryptoMiningCNew.Models
         public Processor Processor { get; set; }
         public VideoCard VideoCard { get; set; }
         public int RAM { get; set; }
-        public double MinedAmountPerHour { get; set; }
+        public decimal MinedAmountPerHour { get; set; }
 
         public Computer(Processor proc, VideoCard videoC, int RAM)
         {

@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller.cs" />
+    <Compile Include="IController.cs" />
     <Compile Include="ModelIntrefaces\IBase.cs" />
     <Compile Include="ModelIntrefaces\IComponent.cs" />
     <Compile Include="ModelIntrefaces\IComputer.cs" />

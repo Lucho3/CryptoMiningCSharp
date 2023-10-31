@@ -10,7 +10,7 @@ namespace CryptoMiningCNew.Models.AbstractModels
     abstract class VideoCard : Component, IVideoCard
     {
         public int RAM { get; set; }
-        public double MinedMoneyPerHour { get; set; }
+        public decimal MinedMoneyPerHour { get; set; }
 
         public VideoCard(string model, decimal price, int generation, int ram)
             : base(model, price, generation, ram * generation * 10)
@@ -21,7 +21,7 @@ namespace CryptoMiningCNew.Models.AbstractModels
             }
 
             this.RAM = ram;
-            this.MinedMoneyPerHour = (double)ram * generation / 10;
+            this.MinedMoneyPerHour = (decimal)ram * generation / 10;
         }
 
         public override string ToString()
