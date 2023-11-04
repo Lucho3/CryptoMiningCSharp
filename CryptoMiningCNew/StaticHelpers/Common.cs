@@ -12,7 +12,6 @@ namespace CryptoMiningCNew.StaticHelpers
     //static classes can not use interfaces
     static class Common
     {
-
         //Symple lambads
         private static bool ValidateProcessorGen(int generation) => generation > 0 && generation <= 9;
         private static bool ValidatePrice(decimal price) => price > 0 && price <= 10000;
@@ -41,7 +40,6 @@ namespace CryptoMiningCNew.StaticHelpers
             else
                 throw new ArgumentException("No such video card!");
         }
-
 
         //Pisha na bulgarski shtoto sum v deili i tva izvrashtenie na prirodata ne e normalno
         //Tuk izpolzvame reflekshuni i delegati celta na tva neshto e bazirano na daden string da

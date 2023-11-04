@@ -183,12 +183,5 @@ namespace CryptoMiningCNew
 
             Common.Validate(ref value, validationType, $"the {prompt} ");
         }
-
-
-
-
-
-
-
     }
 }
